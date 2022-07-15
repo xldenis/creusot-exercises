@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Check opam installation
+
+if ! command -v opam &> /dev/null
+then
+  echo "Please install opam using your system package manager"
+  exit
+fi
+
+# Pin to latest why3
+opam pin why3 https://gitlab.inria.fr/why3/why3
+opam pin why3-ide https://gitlab.inria.fr/why3/why3
+
+# Install why3 and friends
+echo "Installing Why3 and dependencies"
+echo "Note: This will require GTK3"
+opam install -y ocamlgraph lablgtk3 lablgtk3-sourceview why3 why3-ide
+
+# Install Creusot
+echo "Installing Creusot from git"
+cargo install creusot --git https://github.com/xldenis/creusot
+
+echo "All done! Let's get to proving :)"
