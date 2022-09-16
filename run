@@ -19,10 +19,13 @@ fi
 cargo creusot -- --features=contracts
 
 contracts_location=$(ls -t target/debug/deps/libcreusot_contracts-*.rmeta | head -1)
-output_file="exercises/$(basename $file .rs).mlcfg"
+output_file="$(basename $file .rs).mlcfg"
+base="$(pwd)"
+
+cd "$(dirname $file)"
 
 rustup run $(rustup show active-toolchain | cut -d " "  -f 1) creusot-rustc --output-file=$output_file -- -Zno-codegen \
-  --extern creusot_contracts=$contracts_location \
-  -Ldependency=./target/debug/deps/ \
+  --extern creusot_contracts=$base/$contracts_location \
+  -Ldependency=$base/target/debug/deps/ \
   --crate-type=lib \
-  $file
+  "$(basename $file)"
